@@ -1,4 +1,4 @@
-package me.sebastian420.PandaAntiPermanentBlockBreak.mixin;
+package me.TreeOfSelf.PandaAntiPermanentBlockBreak.mixin;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

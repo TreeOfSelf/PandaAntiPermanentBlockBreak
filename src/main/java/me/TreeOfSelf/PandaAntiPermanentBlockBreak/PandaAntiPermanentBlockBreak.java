@@ -1,4 +1,4 @@
-package me.sebastian420.PandaAntiPermanentBlockBreak;
+package me.TreeOfSelf.PandaAntiPermanentBlockBreak;
 
 import net.fabricmc.api.ModInitializer;
 

@@ -1,11 +1,11 @@
 {
 	"required": true,
-	"package": "me.sebastian420.PandaAntiPermanentBlockBreak.mixin",
+	"package": "me.TreeOfSelf.PandaAntiPermanentBlockBreak.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"AggressiveAntiRemovalMixin",
-		"MushroomRemovalMixin",
-		"PistonRemovalMixin"
+      "AggressiveAntiRemovalMixin",
+      "MushroomRemovalMixin",
+      "PistonRemovalMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

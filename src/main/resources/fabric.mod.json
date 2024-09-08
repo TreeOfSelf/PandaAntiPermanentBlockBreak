@@ -5,7 +5,7 @@
 	"name": "panda-anti-permanent-block-break",
 	"description": "Disables the breaking of Bedrock and End Portal Frames",
 	"authors": [
-		"Sebastian420"
+		"TreeOfSelf"
 	],
 	"contact": {
 		"homepage": "",
@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"me.sebastian420.PandaAntiPermanentBlockBreak.PandaAntiPermanentBlockBreak"
+          "me.TreeOfSelf.PandaAntiPermanentBlockBreak.PandaAntiPermanentBlockBreak"
 		]
 	},
 	"mixins": [

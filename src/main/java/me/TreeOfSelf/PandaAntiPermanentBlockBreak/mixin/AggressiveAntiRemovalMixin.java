@@ -19,9 +19,9 @@ public class AggressiveAntiRemovalMixin {
             ),
             cancellable = true
     )
-    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved, CallbackInfo ci) {
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, boolean moved, CallbackInfo ci) {
        if (state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.END_PORTAL_FRAME || state.getBlock() == Blocks.END_PORTAL) {
-           if (state.getBlock() != newState.getBlock()) {
+           if (state.getBlock() != world.getBlockState(pos).getBlock()) {
                world.setBlockState(pos, state);
                ci.cancel();
            }

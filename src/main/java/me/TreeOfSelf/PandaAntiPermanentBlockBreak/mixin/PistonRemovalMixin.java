@@ -19,8 +19,7 @@ public class PistonRemovalMixin {
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z",
 					ordinal = 0
-			),
-			cancellable = true
+			)
 	)
 	protected void onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data, CallbackInfoReturnable<Boolean> cir) {
 			Direction direction = state.get(PistonBlock.FACING);
@@ -35,8 +34,7 @@ public class PistonRemovalMixin {
 					value = "INVOKE",
 					target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z",
 					ordinal = 1
-			),
-			cancellable = true
+			)
 	)
 	protected void onSyncedBlockEventTwo(BlockState state, World world, BlockPos pos, int type, int data, CallbackInfoReturnable<Boolean> cir) {
 		Direction direction = state.get(PistonBlock.FACING);

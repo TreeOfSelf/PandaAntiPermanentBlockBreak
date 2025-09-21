@@ -35,30 +35,21 @@ public class AggressiveAntiRemovalMixin {
                     ci.cancel();
                 }
             }
-        } else {
-            if (state.getBlock() == Blocks.END_PORTAL_FRAME) {
-                if (state.getBlock() != world.getBlockState(pos).getBlock()) {
-                    world.setBlockState(pos, state);
-                    ci.cancel();
-                }
-            } else if (state.getBlock() == Blocks.BEDROCK) {
-
-                if (state.getBlock() != world.getBlockState(pos).getBlock()) {
-                    List<EndSpikeFeature.Spike> spikes = EndSpikeFeature.getSpikes(world);
-
-                    for (EndSpikeFeature.Spike spike : spikes) {
-                        int x = spike.getCenterX();
-                        int z = spike.getCenterZ();
-                        int y = world.getSeaLevel() + spike.getHeight() + 1;
-                        if (pos.equals(new BlockPos(x,y,z))) {
-                            return;
-                        }
-                    }
-
-                    world.setBlockState(pos, state);
-                    ci.cancel();
+        } else if (state.getBlock() == Blocks.BEDROCK) {
+            if (state.getBlock() != world.getBlockState(pos).getBlock()) {
+                List<EndSpikeFeature.Spike> spikes = EndSpikeFeature.getSpikes(world);
+                for (EndSpikeFeature.Spike spike : spikes) {
+                    int x = spike.getCenterX();
+                    int z = spike.getCenterZ();
+                    if (pos.getX() == x && pos.getZ() == z)
+                        return;
                 }
             }
+            world.setBlockState(pos, state);
+            ci.cancel();
         }
+
+
+
     }
 }

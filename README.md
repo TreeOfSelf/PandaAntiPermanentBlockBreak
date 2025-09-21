@@ -6,6 +6,9 @@
 
 This mod makes it so that breaking bedrock & end-portal frames is impossible. This also fixes breaking blocks with growing mushrooms, as well as fixing breaking blocks with piston glitching. A configuration file will be made if requested.
 
+## Try it out
+`hardcoreanarchy.gay`   (Deathban Anarchy)  
+`sky.hardcoreanarchy.gay`   (Skyblock Anarchy)
 
 ## Support
 

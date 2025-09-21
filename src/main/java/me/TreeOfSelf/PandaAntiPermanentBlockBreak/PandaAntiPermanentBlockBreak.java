@@ -11,6 +11,7 @@ public class PandaAntiPermanentBlockBreak implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		PandaAntiPermanentBlockBreakConfig.loadConfig();
 		LOGGER.info("PandaAntiPermanentBlockBreak Started!");
 	}
 }

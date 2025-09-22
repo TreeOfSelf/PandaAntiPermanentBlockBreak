@@ -9,6 +9,7 @@ import net.minecraft.world.dimension.PortalForcer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -22,30 +23,55 @@ public class PortalForcerMixin {
     @Inject(method = "isValidPortalPos",
             at = @At("RETURN"),
             cancellable = true)
-    private void checkGroundPortalSafety(BlockPos pos, BlockPos.Mutable temp, Direction portalDirection, int distanceOrthogonalToPortal, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue())
+    private void antiPermanentBlockBreak_expandedSafetyCheck(BlockPos pos, BlockPos.Mutable temp, Direction portalDirection, int distanceOrthogonalToPortal, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue()) {
             return;
+        }
 
-        Direction direction = portalDirection.rotateYClockwise();
+        if (isFallbackAreaUnsafe(pos, portalDirection)) {
+            cir.setReturnValue(false);
+        }
+    }
 
-        for(int l = -1; l < 2; ++l) {
-            for(int m = 0; m < 2; ++m) {
-                for(int n = -1; n < 3; ++n) {
-                    temp.set(pos,
-                            m * portalDirection.getOffsetX() + l * direction.getOffsetX(),
+
+    @Unique
+    private boolean isFallbackAreaUnsafe(BlockPos portalBasePos, Direction primaryDirection) {
+        Direction perpendicularDirection = primaryDirection.rotateYClockwise();
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+        for (int l = -1; l < 2; ++l) {
+            for (int m = 0; m < 2; ++m) {
+                for (int n = -1; n < 3; ++n) {
+                    mutable.set(portalBasePos,
+                            m * primaryDirection.getOffsetX() + l * perpendicularDirection.getOffsetX(),
                             n,
-                            m * portalDirection.getOffsetZ() + l * direction.getOffsetZ());
-
-                    BlockState existing = world.getBlockState(temp);
-
-                    if (existing.isOf(Blocks.BEDROCK) ||
-                            existing.isOf(Blocks.END_PORTAL) ||
-                            existing.isOf(Blocks.END_PORTAL_FRAME)) {
-                        cir.setReturnValue(false);
-                        return;
-                    }
+                            m * primaryDirection.getOffsetZ() + l * perpendicularDirection.getOffsetZ());
+                    if (isForbidden(this.world.getBlockState(mutable))) return true;
                 }
             }
         }
+
+        for (int o = -1; o < 3; ++o) {
+            for (int p = -1; p < 4; ++p) {
+                mutable.set(portalBasePos, o * primaryDirection.getOffsetX(), p, o * primaryDirection.getOffsetZ());
+                if (isForbidden(this.world.getBlockState(mutable))) return true;
+            }
+        }
+
+        for (int p = 0; p < 2; ++p) {
+            for (int k = 0; k < 3; ++k) {
+                mutable.set(portalBasePos, p * primaryDirection.getOffsetX(), k, p * primaryDirection.getOffsetZ());
+                if (isForbidden(this.world.getBlockState(mutable))) return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Unique
+    private boolean isForbidden(BlockState blockState) {
+        return blockState.isOf(Blocks.BEDROCK) ||
+                blockState.isOf(Blocks.END_PORTAL_FRAME) ||
+                blockState.isOf(Blocks.END_PORTAL);
     }
 }

@@ -28,7 +28,7 @@ public class AggressiveAntiRemovalMixin {
         if (!PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("strictBreakCheck")) {
             return;
         }
-        if (world.getDimensionEntry().getKey().get().getRegistry() != DimensionTypes.THE_END.getRegistry()) {
+        if (!world.getDimensionEntry().matchesKey(DimensionTypes.THE_END)) {
             if (state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.END_PORTAL_FRAME) {
                 if (state.getBlock() != world.getBlockState(pos).getBlock()) {
                     world.setBlockState(pos, state);

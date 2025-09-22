@@ -5,6 +5,7 @@
 ## Description
 
 This mod makes it so that breaking bedrock & end-portal frames is impossible. This also fixes breaking blocks with growing mushrooms, as well as fixing breaking blocks with piston glitching. A configuration file will be made if requested.
+The text will be adjusted to match the height of the pose the player had when the logged off, (standing, crouching, crawling, swimming).
 
 ## Configuring
 

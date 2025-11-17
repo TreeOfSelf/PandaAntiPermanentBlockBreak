@@ -17,6 +17,10 @@ public class PandaAntiPermanentBlockBreakConfig {
 
     private static final Map<String, Boolean> FEATURES = new HashMap<>() {{
         put("strictBreakCheck", false);
+        put("protectBedrock", true);
+        put("protectEndPortalFrame", true);
+        put("protectEndPortal", true);
+        put("protectEndGateway", true);
     }};
 
     public static void loadConfig() {

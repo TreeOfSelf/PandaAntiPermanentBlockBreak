@@ -1,5 +1,6 @@
 package me.TreeOfSelf.PandaAntiPermanentBlockBreak.mixin;
 
+import me.TreeOfSelf.PandaAntiPermanentBlockBreak.PandaAntiPermanentBlockBreakConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
@@ -70,8 +71,18 @@ public class PortalForcerMixin {
 
     @Unique
     private boolean isForbidden(BlockState blockState) {
-        return blockState.isOf(Blocks.BEDROCK) ||
-                blockState.isOf(Blocks.END_PORTAL_FRAME) ||
-                blockState.isOf(Blocks.END_PORTAL);
+        if (blockState.isOf(Blocks.BEDROCK) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
+            return true;
+        }
+        if (blockState.isOf(Blocks.END_PORTAL_FRAME) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortalFrame")) {
+            return true;
+        }
+        if (blockState.isOf(Blocks.END_PORTAL) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortal")) {
+            return true;
+        }
+        if (blockState.isOf(Blocks.END_GATEWAY) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndGateway")) {
+            return true;
+        }
+        return false;
     }
 }

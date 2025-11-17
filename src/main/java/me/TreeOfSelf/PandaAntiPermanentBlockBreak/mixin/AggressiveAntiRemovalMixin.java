@@ -29,14 +29,24 @@ public class AggressiveAntiRemovalMixin {
         }
 
         if (!world.getDimensionEntry().matchesKey(DimensionTypes.THE_END)) {
-            if (state.getBlock() == Blocks.BEDROCK || state.getBlock() == Blocks.END_PORTAL_FRAME) {
-                if (state.getBlock() != world.getBlockState(pos).getBlock()) {
-                    world.setBlockState(pos, state);
-                    ci.cancel();
-                }
+            boolean shouldProtect = false;
+
+            if (state.getBlock() == Blocks.BEDROCK && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
+                shouldProtect = true;
+            } else if (state.getBlock() == Blocks.END_PORTAL_FRAME && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortalFrame")) {
+                shouldProtect = true;
+            } else if (state.getBlock() == Blocks.END_PORTAL && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortal")) {
+                shouldProtect = true;
+            } else if (state.getBlock() == Blocks.END_GATEWAY && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndGateway")) {
+                shouldProtect = true;
+            }
+
+            if (shouldProtect && state.getBlock() != world.getBlockState(pos).getBlock()) {
+                world.setBlockState(pos, state);
+                ci.cancel();
             }
         } else {
-            if (state.getBlock() == Blocks.BEDROCK) {
+            if (state.getBlock() == Blocks.BEDROCK && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
                 BlockState newState = world.getBlockState(pos);
 
                 if (newState.getBlock() == Blocks.END_STONE) {

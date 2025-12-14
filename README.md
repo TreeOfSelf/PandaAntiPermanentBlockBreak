@@ -4,24 +4,35 @@
 
 ## Description
 
-This fixes breaking permanent blockx with piston head glitches  and nether portal generation. It also includes a configuration to make changing bedrock/end portal frames literally impossible.
+Prevents breaking permanent blocks via piston head glitches and nether portal generation. Includes granular configuration for protecting specific block types.
 
-## Configuring
+## Configuration
 
-`config/PandaAntiPermanentBlockBreak.json` generated at runtime
+`config/PandaAntiPermanentBlockBreak.json` generated at runtime:
 ```json
 {
-  "strictBreakCheck": false // if set to true, it will be impossible with commands, creative, or any method to break bedrock/end portal frames. EXCEPT for the bedrock that breaks when spawning the end dragon. This is a safe-guard as new methods can be discovered, and mixins can silently break over updates.
+  "protectBedrock": true,
+  "protectEndPortal": true,
+  "protectEndPortalFrame": true,
+  "protectEndGateway": true,
+  "strictBreakCheck": false
 }
 ```
 
+**Options:**
+- `protectBedrock` - Prevents bedrock breaking
+- `protectEndPortal` - Prevents end portal block breaking
+- `protectEndPortalFrame` - Prevents end portal frame breaking
+- `protectEndGateway` - Prevents end gateway breaking
+- `strictBreakCheck` - If `true`, makes protected blocks impossible to break by any method (commands, creative, etc.). Exception: bedrock that breaks when spawning the ender dragon
+
 ## Try it out
-`hardcoreanarchy.gay`   (Deathban Anarchy)  
-`sky.hardcoreanarchy.gay`   (Skyblock Anarchy)
+- `hardcoreanarchy.gay` (Deathban Anarchy)
+- `sky.hardcoreanarchy.gay` (Skyblock Anarchy)
 
 ## Support
 
-[Support discord here!]( https://discord.gg/3tP3Tqu983)
+[Discord](https://discord.gg/3tP3Tqu983)
 
 ## License
 

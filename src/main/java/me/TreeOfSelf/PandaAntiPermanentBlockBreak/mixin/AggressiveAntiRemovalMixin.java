@@ -1,14 +1,14 @@
 package me.TreeOfSelf.PandaAntiPermanentBlockBreak.mixin;
 
 import me.TreeOfSelf.PandaAntiPermanentBlockBreak.PandaAntiPermanentBlockBreakConfig;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.world.gen.feature.EndPortalFeature;
-import net.minecraft.world.gen.feature.EndSpikeFeature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.EndPodiumFeature;
+import net.minecraft.world.level.levelgen.feature.EndSpikeFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,46 +16,46 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(AbstractBlock.class)
+@Mixin(BlockBehaviour.class)
 public class AggressiveAntiRemovalMixin {
     @Inject(
-            method = "onStateReplaced",
+            method = "affectNeighborsAfterRemoval",
             at = @At(value = "HEAD"),
             cancellable = true
     )
-    protected void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved, CallbackInfo ci) {
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston, CallbackInfo ci) {
         if (!PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("strictBreakCheck")) {
             return;
         }
 
-        if (!world.getDimensionEntry().matchesKey(DimensionTypes.THE_END)) {
+        if (level.dimension() != Level.END) {
             boolean shouldProtect = false;
 
-            if (state.getBlock() == Blocks.BEDROCK && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
+            if (state.is(Blocks.BEDROCK) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
                 shouldProtect = true;
-            } else if (state.getBlock() == Blocks.END_PORTAL_FRAME && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortalFrame")) {
+            } else if (state.is(Blocks.END_PORTAL_FRAME) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortalFrame")) {
                 shouldProtect = true;
-            } else if (state.getBlock() == Blocks.END_PORTAL && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortal")) {
+            } else if (state.is(Blocks.END_PORTAL) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndPortal")) {
                 shouldProtect = true;
-            } else if (state.getBlock() == Blocks.END_GATEWAY && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndGateway")) {
+            } else if (state.is(Blocks.END_GATEWAY) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectEndGateway")) {
                 shouldProtect = true;
             }
 
-            if (shouldProtect && state.getBlock() != world.getBlockState(pos).getBlock()) {
-                world.setBlockState(pos, state);
+            if (shouldProtect && state.getBlock() != level.getBlockState(pos).getBlock()) {
+                level.setBlock(pos, state, 3);
                 ci.cancel();
             }
         } else {
-            if (state.getBlock() == Blocks.BEDROCK && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
-                BlockState newState = world.getBlockState(pos);
+            if (state.is(Blocks.BEDROCK) && PandaAntiPermanentBlockBreakConfig.isFeatureEnabled("protectBedrock")) {
+                BlockState newState = level.getBlockState(pos);
 
-                if (newState.getBlock() == Blocks.END_STONE) {
+                if (newState.is(Blocks.END_STONE)) {
                     return;
                 }
 
                 if (state.getBlock() != newState.getBlock()) {
-                    List<EndSpikeFeature.Spike> spikes = EndSpikeFeature.getSpikes(world);
-                    for (EndSpikeFeature.Spike spike : spikes) {
+                    List<EndSpikeFeature.EndSpike> spikes = EndSpikeFeature.getSpikesForLevel(level);
+                    for (EndSpikeFeature.EndSpike spike : spikes) {
                         int x = spike.getCenterX();
                         int z = spike.getCenterZ();
                         if (pos.getX() == x && pos.getZ() == z) {
@@ -63,8 +63,7 @@ public class AggressiveAntiRemovalMixin {
                         }
                     }
 
-                    BlockPos origin = BlockPos.ORIGIN;
-                    BlockPos exitPortalCenter = EndPortalFeature.offsetOrigin(origin);
+                    BlockPos exitPortalCenter = EndPodiumFeature.getLocation(BlockPos.ZERO);
                     int distance = Math.max(Math.abs(pos.getX() - exitPortalCenter.getX()),
                             Math.abs(pos.getZ() - exitPortalCenter.getZ()));
 
@@ -72,7 +71,7 @@ public class AggressiveAntiRemovalMixin {
                         return;
                     }
 
-                    world.setBlockState(pos, state);
+                    level.setBlock(pos, state, 3);
                     ci.cancel();
                 }
             }

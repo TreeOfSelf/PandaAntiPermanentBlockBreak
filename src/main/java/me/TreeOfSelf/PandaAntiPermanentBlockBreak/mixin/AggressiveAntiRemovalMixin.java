@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.EndPodiumFeature;
+import net.minecraft.world.level.dimension.end.EnderDragonFight;
 import net.minecraft.world.level.levelgen.feature.EndSpikeFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -63,7 +63,7 @@ public class AggressiveAntiRemovalMixin {
                         }
                     }
 
-                    BlockPos exitPortalCenter = EndPodiumFeature.getLocation(BlockPos.ZERO);
+                    BlockPos exitPortalCenter = EnderDragonFight.getPodiumLocation(BlockPos.ZERO);
                     int distance = Math.max(Math.abs(pos.getX() - exitPortalCenter.getX()),
                             Math.abs(pos.getZ() - exitPortalCenter.getZ()));
 
